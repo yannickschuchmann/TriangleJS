@@ -1,0 +1,9 @@
+<button ng-click="export()">Export</button>
+<button ng-click="clear()">Clear</button>
+<button ng-click="undo()">Undo</button>
+<form ng-submit="addRandom()">
+  <input type="text" ng-model="randomAmount"/>
+  <button type="submit">Add Random</button>
+</form>
+<label>color tolerance:</label>
+<input type="range" min="1" max="50" ng-model="settings.colorRange" ng-change="updateSettings()" class="range"/>
