@@ -27,8 +27,8 @@ angular.module('triangleJsApp')
 
     $scope.addRandom = function() {
       var w = settingsService.get('width'), h = settingsService.get('height');
-      for (let i = 0; i < this.randomAmount; i++) {
-        let vertex = [~~(Math.random() * w), ~~(Math.random() * h)];
+      for (var i = 0; i < this.randomAmount; i++) {
+        var vertex = [~~(Math.random() * w), ~~(Math.random() * h)];
         verticesService.addVertex(vertex);
       }
       $rootScope.$broadcast('render');

@@ -15,10 +15,10 @@ angular.module('triangleJsApp')
       this.vertices = vertices;
       this.getCenterVertex = function() {
         var x, y = x = 0, length = this.vertices.length;
-        for (let v of this.vertices) {
+        this.vertices.forEach(function(v) {
           x += v[0];
           y += v[1];
-        }
+        });
 
         return [~~(x / length), ~~(y / length)]
       }

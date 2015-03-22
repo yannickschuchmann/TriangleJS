@@ -70,7 +70,7 @@ angular.module('triangleJsApp')
       var triangles = verticesService.getTriangles();
       settings = settingsService.get();
 
-      for(let triangle of triangles) {
+      triangles.forEach(function(triangle) {
         var v0 = triangle.vertices[0],
           v1 = triangle.vertices[1],
           v2 = triangle.vertices[2];
@@ -84,7 +84,7 @@ angular.module('triangleJsApp')
         ctx.fill();
         //ctx.stroke();
 
-      }
+      });
 
       return ctx;
     };
