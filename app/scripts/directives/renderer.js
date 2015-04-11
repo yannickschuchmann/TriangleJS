@@ -8,16 +8,19 @@
  */
 angular.module('triangleJsApp')
   .directive('renderer', function (verticesService, settingsService) {
-    var imgCanvas, imgCtx, canvas, canvasCtx, settings;
+    var imgCanvas, imgCtx, canvas, canvasCtx, settings, dropbox, imgSource;
 
     var setup = function(element) {
+      dropbox = document.getElementById('dropbox');
       imgCanvas = document.getElementById("image");
       imgCtx = imgCanvas.getContext("2d");
 
       canvas = document.getElementById("polygon");
       canvasCtx = canvas.getContext("2d");
 
-      element.find('img').on('load', function() {
+      imgSource = element.find('img');
+
+      imgSource.on('load', function() {
         canvas.width = imgCanvas.width = this.width;
         canvas.height = imgCanvas.height = this.height;
         settingsService.set({
@@ -37,6 +40,45 @@ angular.module('triangleJsApp')
 
     var setupEvents = function() {
       canvas.addEventListener("mousedown", addVertex, false);
+
+      document.addEventListener('dragenter', dragEnter, false);
+      document.addEventListener('dragexit', dragExit, false);
+      dropbox.addEventListener('dragover', boxOver, false);
+      dropbox.addEventListener('drop', drop, false);
+
+    };
+
+    var dragEnter = function(e) {
+      e.stopPropagation();
+      e.preventDefault();
+
+      dropbox.style.zIndex = 100;
+    };
+
+    var dragExit = function(e) {
+      e.stopPropagation();
+      e.preventDefault();
+
+      dropbox.style.zIndex = -1;
+    };
+
+    var boxOver = function(e) {
+      e.stopPropagation();
+      e.preventDefault();
+    };
+
+    var drop = function(e) {
+      e.stopPropagation();
+      e.preventDefault();
+
+      var reader = new FileReader();
+      reader.onload = function (ev) {
+        imgSource.attr('src',ev.target.result);
+      };
+
+      reader.readAsDataURL(e.dataTransfer.files[0]);
+
+      dropbox.style.zIndex = -1;
     };
 
     var addVertex = function(e) {
@@ -140,7 +182,11 @@ angular.module('triangleJsApp')
     };
 
     return {
-      templateUrl: 'scripts/directives/renderer.html',
+      template: '<div id="dropbox"></div><img src="" id="source" alt=""/>'+
+      '<div style="position: relative;">'+
+      '<canvas id="image" style="position: absolute; left: 0; top: 0; z-index: 0;"></canvas>'+
+      '<canvas id="polygon" style="position: absolute; left: 0; top: 0; z-index: 1;"></canvas>'+
+      '</div>',
       restrict: 'E',
       link: function(scope, el) {
         setup(el);
